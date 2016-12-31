@@ -21,11 +21,8 @@ const list = [
   },
 ];
 
-function isSearched(query) {
-  return function(item){
-    return !query || item.title.toLowerCase().include(query.toLowerCase());
-  }
-}
+const isSearched = query => (item) =>
+     !query || item.title.toLowerCase().include(query.toLowerCase());
 
 class App extends Component {
   constructor(props){
@@ -44,25 +41,53 @@ class App extends Component {
   }
 
   render() {
-    const query = this.state.query;
+    const { query, list } = this.state;
     return (
       <div className="App">
-        <form>
+          <Search >
+            value = {query}
+            onChange = {this.onSearchChange}
+            Search
+          </Search>
+          <Table
+            list = {list}
+            pattern = 'query'
+          />
+      </div>
+    );
+  }
+}
+
+
+class Search extends Component {
+  render(){
+    const { value, onChange, children } = this.props;
+    return(
+       <form>
+          {children}
           <input type='text'
           value = {query}
            onChange={this.onSearchChange} />
-        </form>
+      </form>
+    );
+  }
+}
 
-        { this.state.list.filter(isSearched(query)).map((item) =>
+class Table extends Component {
+  render(){
+    const { list, pattern} = this.props;
+    return (
+        <div>
+          { list.filter(isSearched(pattern)).map((item) =>
 
-              <div key={item.objectID}>
-                <span><a href={item.url}>{item.title}</a></span>
-                <span> {item.author}</span>
-                <span> {item.num_comments}</span>
-                <span> {item.points}</span>
-              </div>
-        )}
-      </div>
+                <div key={item.objectID}>
+                  <span><a href={item.url}>{item.title}</a></span>
+                  <span> {item.author}</span>
+                  <span> {item.num_comments}</span>
+                  <span> {item.points}</span>
+                </div>
+          )}
+        </div>
     );
   }
 }
