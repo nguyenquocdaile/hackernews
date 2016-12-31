@@ -21,6 +21,11 @@ const list = [
   },
 ];
 
+function isSearched(query) {
+  return function(item){
+    return !query || item.title.toLowerCase().include(query.toLowerCase());
+  }
+}
 
 class App extends Component {
   constructor(props){
@@ -38,7 +43,6 @@ class App extends Component {
     this.setState({ query: event.target.value });
   }
 
-
   render() {
     const query = this.state.query;
     return (
@@ -48,7 +52,8 @@ class App extends Component {
           value = {query}
            onChange={this.onSearchChange} />
         </form>
-        { this.state.list.map((item) =>
+
+        { this.state.list.filter(isSearched(query)).map((item) =>
 
               <div key={item.objectID}>
                 <span><a href={item.url}>{item.title}</a></span>
