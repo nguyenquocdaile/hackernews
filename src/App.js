@@ -59,23 +59,19 @@ class App extends Component {
 }
 
 
-class Search extends Component {
-  render(){
-    const { value, onChange, children } = this.props;
+
+const Search = ({ value, onChange, children }) => {
     return(
        <form>
           {children}
-          <input type='text'
+          <input type="text"
           value = {query}
            onChange={this.onSearchChange} />
       </form>
     );
-  }
 }
 
-class Table extends Component {
-  render(){
-    const { list, pattern} = this.props;
+const Table ({ list, pattern}) => {
     return (
         <div>
           { list.filter(isSearched(pattern)).map((item) =>
@@ -89,7 +85,7 @@ class Table extends Component {
           )}
         </div>
     );
-  }
 }
+
 
 export default App;
