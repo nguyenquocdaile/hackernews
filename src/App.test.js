@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
 import App from './App';
 import { Search, Button, Table } from './App';
+import { shallow } from 'enzyme'
 
 
 describe('App', () => {
@@ -72,5 +73,14 @@ describe('Table', () =>{
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
     });
+
+    it('shows tow items in list', () =>{
+        const element = shallow(
+            <Table {...props} />
+        );
+
+    expect(element.find('table-row').length).toBe(2);
+    });
+
 });
 
