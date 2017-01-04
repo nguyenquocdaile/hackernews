@@ -22,6 +22,7 @@ class App extends Component {
       results: null,
       query: DEFAULT_QUERY,
       search: '',
+      isLoading: false,
     };
 
 
@@ -41,12 +42,14 @@ class App extends Component {
       this.setState({
       results: {
           ...this.state.results,
-          [searchKey]: { hits: updatedHits, page }
+          [searchKey]: { hits: updatedHits, page },
+          isLoading: false
       }
       });
 }
 
   fetchSearchTopstories(query, page){
+    this.setState({ isLoading: true});
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${query}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`).then(response => response.json()).then(result => this.setSearchTopstories(result));
   }
 
@@ -74,7 +77,7 @@ class App extends Component {
   }
 
   render() {
-    const { query, results, searchKey } = this.state;
+    const { query, results, searchKey, isLoading } = this.state;
     const page = (results && results[searchKey] && results[searchKey].page) || 0;
     const list = (results && results[searchKey] && results[searchKey].hits) || [];
     return (
@@ -90,15 +93,20 @@ class App extends Component {
         </div>
         { results && <Table list={results.hits} />  }
         <div className="interactions">
-          <Button onClick={() => this.fetchSearchTopstories(query, page + 1)}>
-                More
-          </Button>
+          <ButtonWithLoading
+            isLoading={isLoading}
+            onClick={() => this.fetchSearchTopstories(query, page + 1)}>
+            More
+          </ButtonWithLoading>
         </div>
       </div>
     );
   }
 }
 
+
+const widthLoading = (Component) => ({ isLoading, ...rest}) =>
+  isLoading ? <Loading /> : <Component {...rest} />;
 
 
 const Search = ({ value, onChange, onSubmit, children }) =>
@@ -140,6 +148,9 @@ const Button = ({ onClick, children}) =>
     {children}
   </button>
 
+const Loading = () =>
+  <div> Loading... </div>
+const ButtonWithLoading = widthLoading(Button);
 
 export default App;
 
