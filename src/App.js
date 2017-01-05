@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import './App.css';
+
+
 const DEFAULT_QUERY = 'redux';
 const DEFAULT_PAGE = 0;
 const DEFAULT_HPP = '100';
@@ -13,11 +15,11 @@ const PARAM_HPP = 'hitsPerPage=';
 
 
 const SORTS = {
-NONE: list => list,
-TITLE: list => sortBy(list, 'title'),
-AUTHOR: list => sortBy(list, 'author'),
-COMMENTS: list => sortBy(list, 'num_comments').reverse(),
-POINTS: list => sortBy(list, 'points').reverse(),
+    NONE: list => list,
+    TITLE: list => sortBy(list, 'title'),
+    AUTHOR: list => sortBy(list, 'author'),
+    COMMENTS: list => sortBy(list, 'num_comments').reverse(),
+    POINTS: list => sortBy(list, 'points').reverse(),
 };
 
 
@@ -25,12 +27,12 @@ class App extends Component {
   constructor(props) {
       super(props);
       this.state = {
-      results: null,
-      query: DEFAULT_QUERY,
-      searchKey: '',
-      isLoading: false,
-      sortKey: 'NONE',
-      isSortReverse: false,
+        results: null,
+        query: DEFAULT_QUERY,
+        searchKey: '',
+        isLoading: false,
+        sortKey: 'NONE',
+        isSortReverse: false,
       };
       this.setSearchTopstories = this.setSearchTopstories.bind(this);
       this.fetchSearchTopstories = this.fetchSearchTopstories.bind(this);
@@ -47,11 +49,11 @@ class App extends Component {
       const oldHits = page === 0 ? [] : this.state.results[searchKey].hits;
       const updatedHits = [ ...oldHits, ...hits ];
       this.setState({
-      results: {
-      ...this.state.results,
-      [searchKey]: { hits: updatedHits, page }
-      },
-      isLoading: false
+        results: {
+        ...this.state.results,
+        [searchKey]: { hits: updatedHits, page }
+        },
+        isLoading: false
       });
   }
 
@@ -94,30 +96,30 @@ render() {
     const list = (results && results[searchKey] && results[searchKey].hits) || [];
     return (
         <div className="page">
-        <div className="interactions">
-          <Search
-            value={query}
-            onChange={this.onSearchChange}
-            onSubmit={this.onSearchSubmit}
-          >
-          Search
-          </Search>
-        </div>
+          <div className="interactions">
+            <Search
+              value={query}
+              onChange={this.onSearchChange}
+              onSubmit={this.onSearchSubmit}
+            >
+            Search
+            </Search>
+          </div>
 
-        <Table
-          list={list}
-          sortKey={sortKey}
-          isSortReverse={isSortReverse}
-          onSort={this.onSort}
-        />
+          <Table
+            list={list}
+            sortKey={sortKey}
+            isSortReverse={isSortReverse}
+            onSort={this.onSort}
+          />
 
-        <div className="interactions">
-        <ButtonWithLoading
-          isLoading={isLoading}
-          onClick={() => this.fetchSearchTopstories(searchKey, page + 1)}>
-          More
-        </ButtonWithLoading>
-        </div>
+          <div className="interactions">
+            <ButtonWithLoading
+              isLoading={isLoading}
+              onClick={() => this.fetchSearchTopstories(searchKey, page + 1)}>
+              More
+            </ButtonWithLoading>
+          </div>
       </div>
         );
         }
@@ -125,12 +127,12 @@ render() {
 const Search = ({ value, onChange, onSubmit, children }) =>
   <form onSubmit={onSubmit}>
       <input
-      type="text"
-      value={value}
-      onChange={onChange}
+        type="text"
+        value={value}
+        onChange={onChange}
       />
       <button type="submit">
-      {children}
+        {children}
       </button>
   </form>
 
@@ -138,7 +140,8 @@ const Search = ({ value, onChange, onSubmit, children }) =>
 const Table = ({ list, sortKey, isSortReverse, onSort }) => {
     const sortedList = SORTS[sortKey](list);
     const reverseSortedList = isSortReverse ? sortedList.reverse() : sortedList;
-return(
+
+    return(
         <div className="table">
         <div className="table-header">
           <span style={{ width: '40%' }}>
@@ -150,36 +153,37 @@ return(
                 Title
             </Sort>
           </span>
+
           <span style={{ width: '30%' }}>
-          <Sort
-            sortKey={'AUTHOR'}
-            onSort={onSort}
-            activeSortKey={sortKey}
-
-
-          >
-          Author
-          </Sort>
+            <Sort
+              sortKey={'AUTHOR'}
+              onSort={onSort}
+              activeSortKey={sortKey}
+            >
+            Author
+            </Sort>
           </span>
+
+
           <span style={{ width: '15%' }}>
           <Sort
             sortKey={'COMMENTS'}
             onSort={onSort}
             activeSortKey={sortKey}
           >
-          Comments
+           Comments
           </Sort>
           </span>
 
-        <span style={{ width: '15%' }}>
-            <Sort
-              sortKey={'POINTS'}
-              onSort={onSort}
-              activeSortKey={sortKey}
-            >
-            Points
-            </Sort>
-        </span>
+          <span style={{ width: '15%' }}>
+              <Sort
+                sortKey={'POINTS'}
+                onSort={onSort}
+                activeSortKey={sortKey}
+              >
+              Points
+              </Sort>
+          </span>
         </div>
 
         { reverseSortedList.map((item) =>
